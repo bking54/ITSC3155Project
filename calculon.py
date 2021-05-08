@@ -28,6 +28,7 @@ app.layout = html.Div(children=[
     html.Div('Please input a function of x', style={'color': '#ef3e18', 'margin':'10px'}),
     html.Div(children=[
         dcc.Input(id='input1', placeholder='Type a function of x here...',maxLength=50),
+        dcc.Input(type='button'),
         dcc.Dropdown(
             id='select-graph',
             options=[

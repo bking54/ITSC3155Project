@@ -103,9 +103,19 @@ def getType(char):
 # Evaluates a decomposed and formatted function at a point
 # EMDAS operations
 def eval(list, point):
+    temp = []
     coords = []
-    # while (len(list) > 1 and type(list[0]) != type(list)):
-
+    while (len(list) > 1 and type(list[0]) != type(list)):
+        loop1 = len(list)
+        # Evaluate exponents
+        for i in range(loop1):
+            if (list[i] == '^'):
+                val1 = list[i - 1]
+                val2 = list[i + 1]
+                if (type(val1) == type(list)):
+                            
+        # Evaluate multiplication/division
+        # Evaluate addition/subtraction
     return coords
 
 def main():
