@@ -1,6 +1,9 @@
 # Library of methods used for determining a list of points from a function.
 # Bradley King
 
+import pandas as pd
+import numpy as np
+
 # Decompose a mathematical function into a python list
 # The 'P' in PEMDAS
 def decompose(str):
@@ -131,8 +134,11 @@ def eval(list, point):
         element2 = parseElement(listcopy[index + 1], point)
         out = 0
         if (element2 == 0): # Prevent division by 0
-            out = limitApprox(listcopy, point)
-            print('Limit approx: ' + str(out))
+            lims = limit(listcopy, point, 7)
+            if ((lims[0] > 0 and lims[1] > 0) and (lims[0] > 0 and lims[1] > 0)):
+                out = lims[0] + lims[1]
+            else:
+                out = 0
         else:
             out = element1 / element2
         temp = listcopy[0: (index - 1)]
@@ -192,14 +198,10 @@ def evalRange(list, start, end, delta):
     input = start
     while (input < end):
         coord = []
-        try:
-            output = eval(list, input)
-            coord.append(input)
-            coord.append(output)
-            coords.append(coord.copy())
-            coord = []
-        except:
-            print('Division by 0 excepted')
+        output = eval(list, input)
+        coord.append(input)
+        coord.append(output)
+        coords.append(coord.copy())
         input += delta
     return coords
 
@@ -211,14 +213,21 @@ def limit(list, target, accuracy):
     limit = [pos, neg]
     return limit
 
-# Get the limit as a number approximation
-def limitApprox(list, target):
-    limit = 0
-    accuracy = 10 ** -7
-    result = limit(list, target, accuracy)
-    if ((result[0] > 0 and result[1] > 0) or (result[0] < 0 and result[1] < 0)):
-        limit = result[0] + result[1]
-    return limit
+# Use a set of points to approximate the derivative
+# takes a list of points, and a function
+# lim h -> x of (f(h) - f(x))/(h - x)
+def getDerivative(list, func):
+    coords = []
+    delta = 10 ** -7
+    loop1 = len(list)
+    for i in range(loop1):
+        x = list[i][0]
+        h = x + delta
+        fx = list[i][1]
+        fh = eval(func, h)
+        out = (fh - fx)/(h - x)
+        coords.append([x, out])
+    return coords
 
 def main():
     # str = '2(5x+1)(-6(x+2)^2-(39x))+7'
@@ -226,7 +235,8 @@ def main():
     # str = '5*x^2+6^3/4-49'
     # str = '-3(x+4)^2'
     # str = '234'
-    str = '(x^3/100)/x^2'
+    # str = '-1/x^3'
+    str = 'x^2'
     list = decompose(str)
     # print(list)
     list2 = format(list)
@@ -235,7 +245,8 @@ def main():
     # print(coord)
     coords = evalRange(list2, -100, 100, 1)
     print(coords)
-
+    # lim = limit(list2, 0, 5)
+    # print(lim)
 
 if __name__ == "__main__":
     main()
