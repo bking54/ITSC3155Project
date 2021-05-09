@@ -189,7 +189,7 @@ def parseElement(value, point):
     elif (type(value) == type(1)):
         finalVal = value
     else:
-        print(type(value))
+        return 'string'
     return finalVal
 
 # Create a list of coordinates by evaluating many points
@@ -229,6 +229,9 @@ def getDerivative(list, func):
         coords.append([x, out])
     return coords
 
+# def validate(list):
+
+
 def main():
     # str = '2(5x+1)(-6(x+2)^2-(39x))+7'
     # str = '-2x+(3x-5)/x^2-7x(x+4)-349'
@@ -238,9 +241,9 @@ def main():
     # str = '-1/x^3'
     str = 'x^2'
     list = decompose(str)
-    # print(list)
+    print(list)
     list2 = format(list)
-    # print(list2)
+    print(list2)
     # coord = eval(list2, 2)
     # print(coord)
     coords = evalRange(list2, -100, 100, 1)
