@@ -89,7 +89,7 @@ def format(list):
 # Returns an int representing the type of character
 def getType(char):
     ops = '+-/*^'
-    nums = '0123456789'
+    nums = '.0123456789'
     varbs = 'x'
     if (nums.count(char) > 0):
         return 0
@@ -101,30 +101,99 @@ def getType(char):
         return -1
 
 # Evaluates a decomposed and formatted function at a point
-# EMDAS operations
+# PEMDAS operations
 def eval(list, point):
+    listcopy = list.copy()
     temp = []
-    coords = []
-    while (len(list) > 1 and type(list[0]) != type(list)):
-        loop1 = len(list)
-        # Evaluate exponents
-        for i in range(loop1):
-            if (list[i] == '^'):
-                val1 = list[i - 1]
-                val2 = list[i + 1]
-                if (type(val1) == type(list)):
-                            
-        # Evaluate multiplication/division
-        # Evaluate addition/subtraction
-    return coords
+    while (listcopy.count('^') > 0):
+        index = listcopy.index('^')
+        element1 = parseElement(listcopy[index - 1], point)
+        element2 = parseElement(listcopy[index + 1], point)
+        out = element1 ** element2
+        temp = listcopy[0: (index - 1)]
+        temp.append(out)
+        temp.extend(listcopy[(index + 2):])
+        listcopy = temp.copy()
+    # Evaluate multiplication
+    while (listcopy.count('*')):
+        index = listcopy.index('*')
+        element1 = parseElement(listcopy[index - 1], point)
+        element2 = parseElement(listcopy[index + 1], point)
+        out = element1 * element2
+        temp = listcopy[0: (index - 1)]
+        temp.append(out)
+        temp.extend(listcopy[(index + 2):])
+        listcopy = temp.copy()
+    # Evaluate division
+    while (listcopy.count('/')):
+        index = listcopy.index('/')
+        element1 = parseElement(listcopy[index - 1], point)
+        element2 = parseElement(listcopy[index + 1], point)
+        out = element1 / element2
+        temp = listcopy[0: (index - 1)]
+        temp.append(out)
+        temp.extend(listcopy[(index + 2):])
+        listcopy = temp.copy()
+    # Evaluate addition
+    while (listcopy.count('+')):
+        index = listcopy.index('+')
+        element1 = parseElement(listcopy[index - 1], point)
+        element2 = parseElement(listcopy[index + 1], point)
+        out = element1 + element2
+        temp = listcopy[0: (index - 1)]
+        temp.append(out)
+        temp.extend(listcopy[(index + 2):])
+        listcopy = temp.copy()
+    # Evaluate subtraction
+    while (listcopy.count('-')):
+        index = listcopy.index('-')
+        element1 = parseElement(listcopy[index - 1], point)
+        element2 = parseElement(listcopy[index + 1], point)
+        out = element1 - element2
+        temp = listcopy[0: (index - 1)]
+        temp.append(out)
+        temp.extend(listcopy[(index + 2):])
+        listcopy = temp.copy()
+    if (len(listcopy) == 1 and (type(listcopy[0]) == type(1) or type(listcopy[0]) == type(1.0))):
+        return listcopy[0]
+    elif(type(listcopy) == type('string')):
+        return float(listcopy[0])
+    else:
+        raise Exception('Bad leftovers for eval')
+    return 0
+
+# Find the number value of a element in the list
+# Helper function for eval
+def parseElement(value, point):
+    temp = []
+    finalVal = 0
+    if (type(value) == type(temp)):
+        finalVal = eval(value, point)
+    elif (type(value) == type('string')):
+        if (value == 'x'):
+            finalVal = point
+        else:
+            finalVal = float(value)
+    elif (type(value) == type(1.0)):
+        finalVal = value
+    elif (type(value) == type(1)):
+        finalVal = value
+    else:
+        print(type(value))
+    return finalVal
 
 def main():
     str = '2(5x+1)(-6(x+2)^2-(39x))+7'
     # str = '-2x+(3x-5)/x^2-7x(x+4)-349'
+    # str = '5*x^2+6^3/4-49'
+    # str = '-3(x+4)^2'
+    # str = '234'
     list = decompose(str)
-    print(list)
+    # print(list)
     list2 = format(list)
-    print(list2)
+    # print(list2)
+    coord = eval(list2, 2)
+    print(coord)
 
 if __name__ == "__main__":
     main()
