@@ -7,7 +7,11 @@ import numpy as np
 import plotly.graph_objs as go
 import calclib as cl
 
-df = pd.DataFrame(np.array([[1,1], [4,4], [9,9]]), columns=['x','y'])
+fx = '100/x^2'
+list = cl.decompose(fx)
+list = cl.format(list)
+coords = cl.evalRange(list, -100, 100, 1)
+df = pd.DataFrame(np.array(coords), columns=['x','y'])
 data = [go.Scatter(x=df['x'], y=df['y'], mode='lines', name='main_function', showlegend=False)]
 
 app = dash.Dash()

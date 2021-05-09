@@ -129,7 +129,12 @@ def eval(list, point):
         index = listcopy.index('/')
         element1 = parseElement(listcopy[index - 1], point)
         element2 = parseElement(listcopy[index + 1], point)
-        out = element1 / element2
+        out = 0
+        if (element2 == 0): # Prevent division by 0
+            out = limitApprox(listcopy, point)
+            print('Limit approx: ' + str(out))
+        else:
+            out = element1 / element2
         temp = listcopy[0: (index - 1)]
         temp.append(out)
         temp.extend(listcopy[(index + 2):])
@@ -160,7 +165,6 @@ def eval(list, point):
         return float(listcopy[0])
     else:
         raise Exception('Bad leftovers for eval')
-    return 0
 
 # Find the number value of a element in the list
 # Helper function for eval
@@ -182,18 +186,56 @@ def parseElement(value, point):
         print(type(value))
     return finalVal
 
+# Create a list of coordinates by evaluating many points
+def evalRange(list, start, end, delta):
+    coords = []
+    input = start
+    while (input < end):
+        coord = []
+        try:
+            output = eval(list, input)
+            coord.append(input)
+            coord.append(output)
+            coords.append(coord.copy())
+            coord = []
+        except:
+            print('Division by 0 excepted')
+        input += delta
+    return coords
+
+# Get the positive and negative limits at a certain accuracy
+def limit(list, target, accuracy):
+    delta = 10 ** (-1 * accuracy)
+    pos = eval(list, target + delta)
+    neg = eval(list, target - delta)
+    limit = [pos, neg]
+    return limit
+
+# Get the limit as a number approximation
+def limitApprox(list, target):
+    limit = 0
+    accuracy = 10 ** -7
+    result = limit(list, target, accuracy)
+    if ((result[0] > 0 and result[1] > 0) or (result[0] < 0 and result[1] < 0)):
+        limit = result[0] + result[1]
+    return limit
+
 def main():
-    str = '2(5x+1)(-6(x+2)^2-(39x))+7'
+    # str = '2(5x+1)(-6(x+2)^2-(39x))+7'
     # str = '-2x+(3x-5)/x^2-7x(x+4)-349'
     # str = '5*x^2+6^3/4-49'
     # str = '-3(x+4)^2'
     # str = '234'
+    str = '(x^3/100)/x^2'
     list = decompose(str)
     # print(list)
     list2 = format(list)
     # print(list2)
-    coord = eval(list2, 2)
-    print(coord)
+    # coord = eval(list2, 2)
+    # print(coord)
+    coords = evalRange(list2, -100, 100, 1)
+    print(coords)
+
 
 if __name__ == "__main__":
     main()
