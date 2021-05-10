@@ -60,3 +60,28 @@ def test_format4():
     list = ['0', '-', '2', '*', 'x', '+', '40']
     test = cl.format(format_input)
     assert test == list
+
+def test_eval1():
+    xval = 2
+    eval_input = ['x', '+', '4']
+    test = cl.eval(eval_input, xval)
+    assert xval + 4 == test
+
+def test_eval2():
+    xval = 2
+    eval_input = ['2', '*', ['x', '-', '4'], '+', '10']
+    test = cl.eval(eval_input, xval)
+    assert 2 * (xval - 4) + 10  == test
+
+def test_eval3():
+    xval = 2
+    eval_input = ['x', '^', 'x']
+    test = cl.eval(eval_input, xval)
+    assert xval ** xval == test
+
+def test_eval4():
+    xval = 2
+    eval_input = ['x', '/', '4']
+    test = cl.eval(eval_input, xval)
+    assert xval / 4 == test
+
