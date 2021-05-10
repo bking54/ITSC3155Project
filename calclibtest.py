@@ -30,4 +30,33 @@ def test_decompose5():
     list = ['-2x', ['x-3', ['x-1'], '^2'], '-49']
     test = cl.decompose(decompose_input)
     assert test == list
-    
+
+def test_format1():
+    format_input = ['x+4']
+    list = ['x', '+', '4']
+    test = cl.format(format_input)
+    assert test == list
+
+def test_format2():
+    format_input = [['x+4'], '+200']
+    list = [['x', '+', '4'], '+', '200']
+    test = cl.format(format_input)
+    assert test == list
+
+def test_format3():
+    format_input = ['-x+4']
+    list = ['0', '-', 'x', '+', '4']
+    test = cl.format(format_input)
+    assert test == list
+
+def test_format4():
+    format_input = ['2x+40']
+    list = ['2', '*', 'x', '+', '40']
+    test = cl.format(format_input)
+    assert test == list
+
+def test_format4():
+    format_input = ['-2x+40']
+    list = ['0', '-', '2', '*', 'x', '+', '40']
+    test = cl.format(format_input)
+    assert test == list
