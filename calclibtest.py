@@ -85,3 +85,48 @@ def test_eval4():
     test = cl.eval(eval_input, xval)
     assert xval / 4 == test
 
+def test_gettype1():
+    test_val = '1'
+    test = cl.getType(test_val)
+    assert test == 0
+
+def test_gettype2():
+    test_val = '+'
+    test = cl.getType(test_val)
+    assert test == 1
+
+def test_gettype3():
+    test_val = 'x'
+    test = cl.getType(test_val)
+    assert test == 2
+
+def test_gettype4():
+    test_val = 'g'
+    test = cl.getType(test_val)
+    assert test == -1
+
+def test_parseelement1():
+    element = '1'
+    test = cl.parseElement(element, 0)
+    assert test == 1
+
+def test_parseelement2():
+    element = '0.5'
+    test = cl.parseElement(element, 0)
+    assert type(test) == type(0.5)
+
+def test_parseelement3():
+    element = 1
+    test = cl.parseElement(element, 0)
+    assert test == 1
+
+def test_parseelement4():
+    element = ['x', '+', '4']
+    test = cl.parseElement(element, 0)
+    assert test == 4
+
+def test_evalrange1():
+    element = ['x', '^', '2']
+    check = [[-5, 25], [-4, 16], [-3, 9], [-2, 4], [-1, 1], [0,0], [1, 1], [2, 4], [3, 9], [4, 16], [5, 25]]
+    test = cl.evalRange(element, -5, 6, 1)
+    assert test == check

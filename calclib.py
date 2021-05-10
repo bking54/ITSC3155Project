@@ -185,8 +185,6 @@ def parseElement(value, point):
         finalVal = value
     elif (type(value) == type(1)):
         finalVal = value
-    else:
-        return 'string'
     return finalVal
 
 # Create a list of coordinates by evaluating many points
