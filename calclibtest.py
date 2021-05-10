@@ -130,3 +130,14 @@ def test_evalrange1():
     check = [[-5, 25], [-4, 16], [-3, 9], [-2, 4], [-1, 1], [0,0], [1, 1], [2, 4], [3, 9], [4, 16], [5, 25]]
     test = cl.evalRange(element, -5, 6, 1)
     assert test == check
+
+def test_evalrange2():
+    element = ['x', '^', '3']
+    check = [[-5, -125], [-4, -64], [-3, -27], [-2, -8], [-1, -1], [0,0], [1, 1], [2, 8], [3, 27], [4, 64], [5, 125]]
+    test = cl.evalRange(element, -5, 6, 1)
+    assert test == check
+
+def test_limit1():
+    element = ['x', '^', '2']
+    test = cl.limit(element, 0, 10)
+    assert test[0] <= 0.00000001 and test[0] >= -0.00000001

@@ -35,11 +35,11 @@ app.layout = html.Div(children=[
         html.Label('Input Function:'),
         dcc.Input(id='input1', placeholder='Type a function of x here...',maxLength=50, value='x^2'),
         html.Label('Lower Bound:'),
-        dcc.Input(id='input2', placeholder='Lower Bound', value= -100),
+        dcc.Input(id='lbound', placeholder='Lower Bound', value= -100),
         html.Label('Upper Bound:'),
-        dcc.Input(id='input3', placeholder='Upper Bound', value= 100),
+        dcc.Input(id='ubound', placeholder='Upper Bound', value= 100),
         html.Label('Delta x:'),
-        dcc.Input(id='input4', placeholder='Delta x', value= 1),
+        dcc.Input(id='deltax', placeholder='Delta x', value= 1),
         dcc.Dropdown(
             id='dropdown1',
             options=[
@@ -59,13 +59,14 @@ app.layout = html.Div(children=[
             }
             ),
     html.Div(children=[
-        dcc.Input(id='input5', placeholder='Enter an x value',maxLength=50),
+        html.Label('Enter a value:'),
+        dcc.Input(id='lim', placeholder='Enter an x value',maxLength=50, value=0),
     ]),
     html.Div(children=[
         html.Label('Positive Limit:'),
-        dcc.Input(id = 'output1', readOnly=True),
+        dcc.Input(id = 'poslim', readOnly=True),
         html.Label('Negative Limit:'),
-        dcc.Input(id= 'output2', readOnly=True)
+        dcc.Input(id= 'neglim', readOnly=True)
     ])
 ])
 
@@ -76,15 +77,18 @@ def update_function(input):
     return input
 
 @app.callback(Output('graph1', 'figure'),
-              Input('func_out', 'children'))
-def update_graph(input):
+              Input('func_out', 'children'),
+              Input('lbound', 'value'),
+              Input('ubound', 'value'),
+              Input('deltax', 'value'))
+def update_graph(input, start, end, delta):
     try:
+        start = int(start)
+        end = int(end)
+        delta = float(delta)
         temp = cl.decompose(input)
-        print(temp)
         func = cl.format(temp)
-        print(func)
-        data = cl.evalRange(func, -10, 10, 1)
-        print(data)
+        data = cl.evalRange(func, start, end + 1, delta)
         df = pd.DataFrame(np.array(data), columns=['x', 'y'])
         output = [go.Scatter(x=df['x'], y=df['y'], mode='lines', name=input, showlegend=False)]
         return {'data': output, 'layout': go.Layout(title='F(x)= ' + str(input),
@@ -95,6 +99,21 @@ def update_graph(input):
                                                     xaxis={'title': 'x'},
                                                     yaxis={'title': 'F(x)'})}
 
+@app.callback(Output('poslim', 'value'),
+              Output('neglim', 'value'),
+              Input('func_out', 'children'),
+              Input('lim', 'value'))
+def update_limit(func, xval):
+    try:
+        if (type(xval) != type(1) or type(xval) != type(1.0)):
+            print('fixed')
+            xval = 0
+        temp = cl.decompose(func)
+        func = cl.format(temp)
+        list = cl.limit(func, xval, 10)
+        return list[0], list[1]
+    except:
+        return 'N/A', 'N/A'
 
 if __name__ == '__main__':
     app.run_server()
