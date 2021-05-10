@@ -16,17 +16,16 @@ app.layout = html.Div(children=[
     html.H1(children='Calculon Graphing Calculator',
             style={
                 'textAlign': 'center',
-                'color': '#ef3e18'
+                'color': '#478DC2'
             }
             ),
     html.Div('Web dashboard for graphing functions using Python', style={'textAlign': 'center'}),
     html.Br(),
-    html.Br(),
-    html.Hr(style={'color': '#7FDBFF'}),
+    html.Hr(style={'color': '#8BC2EC'}),
     html.H2(children='F(x)',
             style={
                 'textAlign': 'center',
-                'color': '#ef3e18'
+                'color': '#478DC2'
             },
             id ='func_out'
             ),
@@ -46,24 +45,27 @@ app.layout = html.Div(children=[
             options=[
                 {'label': 'f(x)', 'value': 'op1'},
                 {'label': 'f(x) and derivative', 'value': 'op2'},
+                {'label': 'f(x) and two derivatives', 'value': 'op3'},
                 {'label': 'f(x) and two derivatives', 'value': 'op3'}
             ],
             value='op1'
         )
     ]),
-    html.Hr(style={'color': '#7FDBFF'}),
+    html.Hr(style={'color': '#8BC2EC'}),
     html.H1(children='Limit Evaluator',
             style={
                 'textAlign': 'center',
-                'color': '#ef3e18'
+                'color': '#478DC2'
             }
             ),
     html.Div(children=[
         dcc.Input(id='input5', placeholder='Enter an x value',maxLength=50),
     ]),
     html.Div(children=[
-        html.Label('Positive Limit: ', id='output1'),
-        html.Label('Negative Limit: ', id='output2')
+        html.Label('Positive Limit:'),
+        dcc.Input(id = 'output1', readOnly=True),
+        html.Label('Negative Limit:'),
+        dcc.Input(id= 'output2', readOnly=True)
     ])
 ])
 

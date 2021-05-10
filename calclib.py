@@ -229,9 +229,6 @@ def getDerivative(list, func):
         coords.append([x, out])
     return coords
 
-# def validate(list):
-
-
 def main():
     # str = '2(5x+1)(-6(x+2)^2-(39x))+7'
     # str = '-2x+(3x-5)/x^2-7x(x+4)-349'
