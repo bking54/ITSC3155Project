@@ -212,6 +212,8 @@ def limit(list, target, accuracy):
 # takes a list of points, and a function
 # lim h -> x of (f(h) - f(x))/(h - x)
 def getDerivative(list, func):
+    temp = decompose(func)
+    data = format(temp)
     coords = []
     delta = 10 ** -7
     loop1 = len(list)
@@ -219,7 +221,7 @@ def getDerivative(list, func):
         x = list[i][0]
         h = x + delta
         fx = list[i][1]
-        fh = eval(func, h)
+        fh = eval(data, h)
         out = (fh - fx)/(h - x)
         coords.append([x, out])
     return coords

@@ -43,10 +43,8 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='dropdown1',
             options=[
-                {'label': 'f(x)', 'value': 'op1'},
-                {'label': 'f(x) and derivative', 'value': 'op2'},
-                {'label': 'f(x) and two derivatives', 'value': 'op3'},
-                {'label': 'f(x) and two derivatives', 'value': 'op3'}
+                {'label': 'f(x) without derivative', 'value': 'op1'},
+                {'label': 'f(x) and derivative', 'value': 'op2'}
             ],
             value='op1'
         )
@@ -80,9 +78,10 @@ def update_function(input):
               Input('func_out', 'children'),
               Input('lbound', 'value'),
               Input('ubound', 'value'),
-              Input('deltax', 'value'))
-def update_graph(input, start, end, delta):
-    try:
+              Input('deltax', 'value'),
+              Input('dropdown1', 'value'))
+def update_graph(input, start, end, delta, option):
+    # try:
         start = int(start)
         end = int(end)
         delta = float(delta)
@@ -90,14 +89,20 @@ def update_graph(input, start, end, delta):
         func = cl.format(temp)
         data = cl.evalRange(func, start, end + 1, delta)
         df = pd.DataFrame(np.array(data), columns=['x', 'y'])
-        output = [go.Scatter(x=df['x'], y=df['y'], mode='lines', name=input, showlegend=False)]
+        output = [go.Scatter(x=df['x'], y=df['y'], mode='lines', name=input)]
+        if (option == 'op2'):
+            deriv = cl.getDerivative(data, input)
+            print(deriv)
+            df2 = pd.DataFrame(np.array(deriv), columns=['x', 'y'])
+            deriv_out= go.Scatter(x=df2['x'], y=df2['y'], mode='lines', name='derivative')
+            output.append(deriv_out)
         return {'data': output, 'layout': go.Layout(title='F(x)= ' + str(input),
                                                       xaxis={'title': 'x'},
                                                       yaxis={'title': 'F(x)'})}
-    except:
-        return {'data': [], 'layout': go.Layout(title='Invalid Expression',
-                                                    xaxis={'title': 'x'},
-                                                    yaxis={'title': 'F(x)'})}
+    # except:
+    #     return {'data': [], 'layout': go.Layout(title='Invalid Expression',
+    #                                                 xaxis={'title': 'x'},
+    #                                                 yaxis={'title': 'F(x)'})}
 
 @app.callback(Output('poslim', 'value'),
               Output('neglim', 'value'),
@@ -105,9 +110,7 @@ def update_graph(input, start, end, delta):
               Input('lim', 'value'))
 def update_limit(func, xval):
     try:
-        if (type(xval) != type(1) or type(xval) != type(1.0)):
-            print('fixed')
-            xval = 0
+        xval = float(xval)
         temp = cl.decompose(func)
         func = cl.format(temp)
         list = cl.limit(func, xval, 10)
